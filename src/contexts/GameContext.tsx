@@ -1,4 +1,3 @@
-// src/contexts/GameContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   createEmptyBoard,
@@ -57,21 +56,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [player1Color, setPlayer1Color] = useState<Player | null>(null);
   const [player2Color, setPlayer2Color] = useState<Player | null>(null);
 
-  const generateGameStateJSON = () => {
-    const gameState = {
-      board,
-      currentPlayer: currentPlayer ? currentPlayer.name : null,
-      player1: player1 ? { name: player1.name, color: player1.color } : null,
-      player2: player2 ? { name: player2.name, color: player2.color } : null,
-      winner,
-      moves,
-    };
-
-    console.log("Game State JSON:", JSON.stringify(gameState, null, 2));
-  };
+  const [playerMoveCompleted, setPlayerMoveCompleted] = useState<boolean>(true);
 
   const handleClick = (colIndex: number) => {
-    if (!currentPlayer || winner) return;
+    if (!currentPlayer || winner || !playerMoveCompleted) return;
 
     const newRow = getNextEmptyRow(board, colIndex);
     if (newRow === null) {
@@ -80,19 +68,19 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     const newBoard = board.map((row) => [...row]);
+
     newBoard[newRow][colIndex] = currentPlayer.color;
     setBoard(newBoard);
     setMoves((prevMoves) => prevMoves + 1);
 
-    // Atualize o estado do vencedor antes de exibir a mensagem
     if (
       moves >= 6 &&
       checkWinner(newBoard, newRow, colIndex, currentPlayer.color)
     ) {
       setTimeout(() => {
         setWinner(currentPlayer);
-        generateGameStateJSON();
-        //alert(`Player ${currentPlayer.name} wins!`);
+        // generateGameStateJSON();
+        alert(`Player ${currentPlayer.name} wins!`);
       }, 100);
       return;
     }
@@ -100,55 +88,63 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isBoardFull(newBoard)) {
       setTimeout(() => {
         setWinner("draw");
-        generateGameStateJSON();
+        // generateGameStateJSON();
         alert("The game is a draw!");
       }, 100);
       return;
     }
 
-    // Alternar o jogador atual
+    setPlayerMoveCompleted(true);
     setCurrentPlayer((prev) =>
       prev?.color === player1?.color ? player2 : player1
     );
+  };
 
-    // Se estiver no modo "vsComputer", faça o movimento do computador
-    if (mode === "vsComputer" && currentPlayer === player1) {
+  useEffect(() => {
+    if (mode === "vsComputer" && currentPlayer?.name === player2?.name) {
+      setPlayerMoveCompleted(false);
+
       setTimeout(() => {
+        console.log("vsComputer");
+
         const emptyCols = board[0]
           .map((_, i) => i)
           .filter((i) => getNextEmptyRow(board, i) !== null);
-        const randomCol =
-          emptyCols[Math.floor(Math.random() * emptyCols.length)];
-        const newRow = getNextEmptyRow(board, randomCol);
-        if (newRow !== null) {
-          const newBoard = board.map((row) => [...row]);
-          newBoard[newRow][randomCol] = player2!.color;
-          setBoard(newBoard);
-          setMoves((prevMoves) => prevMoves + 1);
 
-          if (checkWinner(newBoard, newRow, randomCol, player2!.color)) {
-            setTimeout(() => {
-              setWinner(player2);
-              generateGameStateJSON();
-              alert(`Player ${player2.name} wins!`);
-            }, 100);
-            return;
+        if (emptyCols.length > 0) {
+          const randomCol =
+            emptyCols[Math.floor(Math.random() * emptyCols.length)];
+          const newRow = getNextEmptyRow(board, randomCol);
+
+          if (newRow !== null) {
+            const newBoard = board.map((row) => [...row]);
+            newBoard[newRow][randomCol] = player2!.color;
+            setBoard(newBoard);
+            setMoves((prevMoves) => prevMoves + 1);
+
+            if (checkWinner(newBoard, newRow, randomCol, player2!.color)) {
+              setTimeout(() => {
+                setWinner(player2);
+                alert(`Player ${player2.name} wins!`);
+              }, 100);
+              return;
+            }
+
+            if (isBoardFull(newBoard)) {
+              setTimeout(() => {
+                setWinner("draw");
+                alert("The game is a draw!");
+              }, 100);
+              return;
+            }
+
+            setCurrentPlayer(player1);
+            setPlayerMoveCompleted(true);
           }
-
-          if (isBoardFull(newBoard)) {
-            setTimeout(() => {
-              setWinner("draw");
-              generateGameStateJSON();
-              alert("The game is a draw!");
-            }, 100);
-            return;
-          }
-
-          setCurrentPlayer(player1);
         }
       }, 1000);
     }
-  };
+  }, [currentPlayer, board, mode, player1, player2]);
 
   const startGame = (player1Name: string, player2Name: string) => {
     if (player1Color && player2Color) {
@@ -158,6 +154,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setBoard(createEmptyBoard(rows, cols));
       setMoves(0);
       setWinner(null);
+      setPlayerMoveCompleted(true);
     } else {
       alert("Select colors for both players");
     }
@@ -168,6 +165,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     setCurrentPlayer(player1);
     setMoves(0);
     setWinner(null);
+    setPlayerMoveCompleted(true);
   };
 
   return (

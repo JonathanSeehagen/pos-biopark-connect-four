@@ -15,6 +15,8 @@ const Board: React.FC = () => {
     setPlayer1Color,
     setPlayer2Color,
     startGame,
+    mode,
+    setMode,
   } = useGame();
   const { t, i18n } = useTranslation();
 
@@ -23,6 +25,7 @@ const Board: React.FC = () => {
 
   const [showPlayerSetup, setShowPlayerSetup] = useState(true);
   const [showLanguageSetup, setShowLanguageSetup] = useState(true);
+  const [showModeSetup, setShowModeSetup] = useState(false); // Adicionado para seleção do modo
 
   const [player1Color, setPlayer1ColorState] = useState("");
   const [player2Color, setPlayer2ColorState] = useState("");
@@ -46,6 +49,7 @@ const Board: React.FC = () => {
     e.preventDefault();
     startGame(player1Name, player2Name);
     setShowPlayerSetup(false);
+    setShowModeSetup(true); // Mostrar seleção do modo após configurar jogadores
   };
 
   const handleLanguageChange = (lang: string) => {
@@ -53,35 +57,10 @@ const Board: React.FC = () => {
     setShowLanguageSetup(false);
   };
 
-  const saveGameState = () => {
-    const gameState = {
-      board,
-      player1: {
-        name: player1?.name,
-        color: player1?.color,
-      },
-      player2: {
-        name: player2?.name,
-        color: player2?.color,
-      },
-      currentPlayer: currentPlayer?.name,
-      winner: winner
-        ? winner === "draw"
-          ? "draw"
-          : { name: winner.name, color: winner.color }
-        : null,
-    };
-
-    // Converte o estado do jogo para JSON
-    const gameStateJSON = JSON.stringify(gameState, null, 2);
-
-    // Salva o JSON em um arquivo (ou faz outra coisa com ele, como enviar para um servidor)
-    console.log("Game State JSON:", gameStateJSON);
+  const handleModeSelect = (selectedMode: string) => {
+    setMode(selectedMode);
+    setShowModeSetup(false);
   };
-
-  useEffect(() => {
-    saveGameState();
-  }, [board, currentPlayer, winner]);
 
   return (
     <div className="flex flex-col items-center">
@@ -189,6 +168,24 @@ const Board: React.FC = () => {
             {t("start_game")}
           </button>
         </form>
+      ) : showModeSetup ? (
+        <div className="flex flex-col space-y-4">
+          <h2 className="text-2xl font-bold text-black">{t("select_mode")}</h2>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleModeSelect("multiplayer")}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              {t("multiplayer")}
+            </button>
+            <button
+              onClick={() => handleModeSelect("vsComputer")}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              {t("vs_computer")}
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="flex space-x-8">
           <div className="grid grid-cols-7 gap-2 mb-4">
@@ -197,7 +194,9 @@ const Board: React.FC = () => {
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   className="w-12 h-12 bg-gray-100 border border-black flex items-center justify-center cursor-pointer"
-                  onClick={() => handleClick(colIndex)}
+                  onClick={() => {
+                    handleClick(colIndex);
+                  }}
                 >
                   {cell && (
                     <div
