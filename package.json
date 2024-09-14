@@ -1,0 +1,38 @@
+{
+  "name": "connect-four",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "start": "next start",
+    "start-server": "node server.js",
+    "start-dev": "concurrently \"npm run dev\" \"npm run start-server\""
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^8.2.2",
+    "express": "^4.19.2",
+    "i18next": "^23.15.1",
+    "i18next-browser-languagedetector": "^8.0.0",
+    "i18next-http-backend": "^2.6.1",
+    "next": "14.2.7",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-i18next": "^15.0.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/ws": "^8.5.12",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.7",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5"
+  }
+}

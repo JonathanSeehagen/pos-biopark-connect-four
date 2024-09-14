@@ -1,0 +1,25 @@
+{
+  "select_language": "Выберите язык",
+  "english": "Английский",
+  "portuguese": "Португальский",
+  "russian": "Русский",
+  "select_color": "Пожалуйста, выберите цвет для обоих игроков.",
+  "player1_name": "Имя Игрока 1:",
+  "player1_color": "Цвет фишки Игрока 1:",
+  "player2_name": "Имя Игрока 2:",
+  "player2_color": "Цвет фишки Игрока 2:",
+  "start_game": "Начать игру",
+  "column_full": "Столбец заполнен!",
+  "winner_message": "{{name}} ({{color}}) выиграл!",
+  "draw_message": "Ничья!",
+  "player_info": "Информация об игроках:",
+  "reset_game": "Сбросить игру",
+  "current_player": "Текущий Игрок",
+  "colors": {
+    "red": "Красный",
+    "yellow": "Желтый",
+    "blue": "Синий",
+    "green": "Зеленый",
+    "purple": "Фиолетовый"
+  }
+}

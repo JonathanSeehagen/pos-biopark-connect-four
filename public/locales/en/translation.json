@@ -1,0 +1,25 @@
+{
+  "select_language": "Select Language",
+  "english": "English",
+  "portuguese": "Portuguese",
+  "russian": "Russian",
+  "select_color": "Please select the color for both players.",
+  "player1_name": "Player 1 Name:",
+  "player1_color": "Player 1 Piece Color:",
+  "player2_name": "Player 2 Name:",
+  "player2_color": "Player 2 Piece Color:",
+  "start_game": "Start Game",
+  "column_full": "Column is full!",
+  "winner_message": "{{name}} ({{color}}) won!",
+  "draw_message": "Draw!",
+  "player_info": "Player Information:",
+  "reset_game": "Reset Game",
+  "current_player": "Current Player",
+  "colors": {
+    "red": "Red",
+    "yellow": "Yellow",
+    "blue": "Blue",
+    "green": "Green",
+    "purple": "Purple"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "select_language": "Seleccione el Idioma",
+  "english": "Inglés",
+  "portuguese": "Portugués",
+  "russian": "Ruso",
+  "select_color": "Por favor, seleccione el color para ambos jugadores.",
+  "player1_name": "Nombre del Jugador 1:",
+  "player1_color": "Color de la pieza del Jugador 1:",
+  "player2_name": "Nombre del Jugador 2:",
+  "player2_color": "Color de la pieza del Jugador 2:",
+  "start_game": "Iniciar Juego",
+  "column_full": "¡Columna llena!",
+  "winner_message": "{{name}} ({{color}}) ganó!",
+  "draw_message": "¡Empate!",
+  "player_info": "Información de los Jugadores:",
+  "reset_game": "Reiniciar Juego",
+  "current_player": "Jugador Actual",
+  "colors": {
+    "red": "Rojo",
+    "yellow": "Amarillo",
+    "blue": "Azul",
+    "green": "Verde",
+    "purple": "Morado"
+  }
+}
