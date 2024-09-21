@@ -19,6 +19,7 @@
   "multiplayer": "Multiplayer",
   "vs_computer": "Versus Computer",
   "computer_player_name": "Computer",
+  "wins": "wins",
   "colors": {
     "red": "Red",
     "yellow": "Yellow",

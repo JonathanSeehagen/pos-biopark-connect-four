@@ -20,6 +20,7 @@
   "multiplayer": "Multiplayer",
   "vs_computer": "Contra o Computador",
   "computer_player_name": "Computador",
+  "wins": "venceu",
   "colors": {
     "red": "Vermelho",
     "yellow": "Amarelo",

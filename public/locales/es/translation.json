@@ -19,6 +19,7 @@
   "multiplayer": "Multijugador",
   "vs_computer": "Contra la Máquina",
   "computer_player_name": "Máquina",
+  "wins": "ganó",
   "colors": {
     "red": "Rojo",
     "yellow": "Amarillo",

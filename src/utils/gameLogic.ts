@@ -1,4 +1,4 @@
-export type Player = "red" | "yellow" | "blue" | "green" | "purple";
+export type Player = "red" | "yellow" | "blue" | "green" | "purple" | "black";
 
 export type BoardType = Player[][];
 

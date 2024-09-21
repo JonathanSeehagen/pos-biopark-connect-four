@@ -7,6 +7,7 @@ import {
   Player,
   BoardType,
 } from "../utils/gameLogic";
+import { useTranslation } from "react-i18next";
 
 type PlayerInfo = {
   name: string;
@@ -20,9 +21,10 @@ type GameContextType = {
   player2: PlayerInfo | null;
   winner: PlayerInfo | "draw" | null;
   moves: number;
-  mode: "multiplayer" | "vsComputer";
+  mode: "multiplayer" | "vsComputer" | null;
   player1Color: Player | null;
   player2Color: Player | null;
+  selectedLanguage: string | null;
   setPlayer1: (player: PlayerInfo) => void;
   setPlayer2: (player: PlayerInfo) => void;
   setCurrentPlayer: (player: PlayerInfo | null) => void;
@@ -35,6 +37,10 @@ type GameContextType = {
   handleClick: (colIndex: number) => void;
   resetGame: () => void;
   startGame: (player1Name: string, player2Name: string) => void;
+  handleLanguageChange: (language: string) => void;
+  handleModeSelect: (mode: "multiplayer" | "vsComputer") => void;
+  handleColorSelect: (color: Player, isPlayer1: boolean) => void;
+  handlePlayersSubmit: (player1Name: string, player2Name: string) => void; // Novo método
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -42,6 +48,8 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { t } = useTranslation();
+
   const rows = 6;
   const cols = 7;
 
@@ -51,15 +59,38 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [board, setBoard] = useState<BoardType>(createEmptyBoard(rows, cols));
   const [moves, setMoves] = useState<number>(0);
   const [winner, setWinner] = useState<PlayerInfo | "draw" | null>(null);
-  const [mode, setMode] = useState<"multiplayer" | "vsComputer">("multiplayer");
-
+  const [mode, setMode] = useState<"multiplayer" | "vsComputer" | null>(null);
   const [player1Color, setPlayer1Color] = useState<Player | null>(null);
   const [player2Color, setPlayer2Color] = useState<Player | null>(null);
-
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [playerMoveCompleted, setPlayerMoveCompleted] = useState<boolean>(true);
 
-  const defaultPlayer1Color = "red"; // Cor do jogador 1
-  const defaultPlayer2Color = "yellow"; // Cor do jogador 2
+  const defaultPlayer1Color = "red";
+  const defaultPlayer2Color = "yellow";
+
+  const handleLanguageChange = (language: string) => {
+    console.log("Language Selected: ", language);
+    setSelectedLanguage(language);
+  };
+
+  const handleModeSelect = (selectedMode: "multiplayer" | "vsComputer") => {
+    console.log("Mode Selected: ", selectedMode);
+    setMode(selectedMode);
+
+    if (selectedMode === "vsComputer") {
+      handleColorSelect("black", false);
+    }
+  };
+
+  const handleColorSelect = (color: Player, isPlayer1: boolean) => {
+    if (isPlayer1) {
+      console.log("Color Player 1: ", color);
+      setPlayer1Color(color);
+    } else {
+      console.log("Color Player 2: ", color);
+      setPlayer2Color(color);
+    }
+  };
 
   const handleClick = (colIndex: number) => {
     if (!currentPlayer || winner || !playerMoveCompleted) return;
@@ -122,7 +153,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
             if (checkWinner(newBoard, newRow, randomCol, player2!.color)) {
               setTimeout(() => {
                 setWinner(player2);
-                // alert(`Player ${player2.name} wins!`);
               }, 100);
               return;
             }
@@ -144,20 +174,48 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [currentPlayer, board, mode, player1, player2]);
 
   const startGame = (player1Name: string, player2Name: string) => {
-    setPlayer1Color(defaultPlayer1Color);
-    setPlayer2Color(defaultPlayer2Color);
-
     setPlayer1({
       name: player1Name,
       color: player1Color || defaultPlayer1Color,
     });
-    setPlayer2({
-      name: player2Name,
-      color: player2Color || defaultPlayer2Color,
-    });
+
+    if (mode === "multiplayer") {
+      setPlayer2({
+        name: player2Name,
+        color: player2Color || defaultPlayer2Color,
+      });
+    }
+
     setCurrentPlayer({
       name: player1Name,
       color: player1Color || defaultPlayer1Color,
+    });
+
+    setBoard(createEmptyBoard(rows, cols));
+    setMoves(0);
+    setWinner(null);
+    setPlayerMoveCompleted(true);
+  };
+
+  const handlePlayersSubmit = (player1Name: string, player2Name: string) => {
+    console.log("Player 1 name: ", player1Name);
+    console.log("Player 2 name: ", player2Name);
+
+    const selectedPlayer1Color = player1Color || defaultPlayer1Color;
+    const selectedPlayer2Color = player2Color || defaultPlayer2Color;
+
+    setPlayer1({
+      name: player1Name,
+      color: selectedPlayer1Color,
+    });
+
+    setPlayer2({
+      name: mode === "multiplayer" ? player2Name : t("computer_player_name"),
+      color: selectedPlayer2Color,
+    });
+    setCurrentPlayer({
+      name: player1Name,
+      color: selectedPlayer1Color,
     });
     setBoard(createEmptyBoard(rows, cols));
     setMoves(0);
@@ -185,6 +243,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         mode,
         player1Color,
         player2Color,
+        selectedLanguage,
         setPlayer1,
         setPlayer2,
         setCurrentPlayer,
@@ -197,6 +256,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         handleClick,
         resetGame,
         startGame,
+        handleLanguageChange,
+        handleModeSelect,
+        handleColorSelect,
+        handlePlayersSubmit,
       }}
     >
       {children}
