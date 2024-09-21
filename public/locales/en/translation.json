@@ -1,9 +1,8 @@
 {
   "select_language": "Select Language",
-  "english": "English",
-  "portuguese": "Portuguese",
-  "russian": "Russian",
-  "spanish": "Spanish",
+  "english": "Inglês",
+  "portuguese": "Português",
+  "spanish": "Espanhol",
   "select_color": "Please select the color for both players.",
   "player1_name": "Player 1 Name:",
   "player1_color": "Player 1 Piece Color:",
@@ -16,11 +15,16 @@
   "player_info": "Player Information:",
   "reset_game": "Reset Game",
   "current_player": "Current Player",
+  "select_mode": "Choose Mode",
+  "multiplayer": "Multiplayer",
+  "vs_computer": "Versus Computer",
+  "computer_player_name": "Computer",
   "colors": {
     "red": "Red",
     "yellow": "Yellow",
     "blue": "Blue",
     "green": "Green",
-    "purple": "Purple"
+    "purple": "Purple",
+    "black": "Black"
   }
 }

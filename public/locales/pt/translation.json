@@ -16,11 +16,16 @@
   "player_info": "Informações dos Jogadores:",
   "reset_game": "Reiniciar Jogo",
   "current_player": "Jogador Atual",
+  "select_mode": "Selecionar Modo",
+  "multiplayer": "Multiplayer",
+  "vs_computer": "Contra o Computador",
+  "computer_player_name": "Computador",
   "colors": {
     "red": "Vermelho",
     "yellow": "Amarelo",
     "blue": "Azul",
     "green": "Verde",
-    "purple": "Roxo"
+    "purple": "Roxo",
+    "black": "Preto"
   }
 }

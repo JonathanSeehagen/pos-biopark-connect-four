@@ -58,6 +58,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [playerMoveCompleted, setPlayerMoveCompleted] = useState<boolean>(true);
 
+  const defaultPlayer1Color = "red"; // Cor do jogador 1
+  const defaultPlayer2Color = "yellow"; // Cor do jogador 2
+
   const handleClick = (colIndex: number) => {
     if (!currentPlayer || winner || !playerMoveCompleted) return;
 
@@ -68,7 +71,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     const newBoard = board.map((row) => [...row]);
-
     newBoard[newRow][colIndex] = currentPlayer.color;
     setBoard(newBoard);
     setMoves((prevMoves) => prevMoves + 1);
@@ -79,8 +81,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     ) {
       setTimeout(() => {
         setWinner(currentPlayer);
-        // generateGameStateJSON();
-        alert(`Player ${currentPlayer.name} wins!`);
       }, 100);
       return;
     }
@@ -88,7 +88,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isBoardFull(newBoard)) {
       setTimeout(() => {
         setWinner("draw");
-        // generateGameStateJSON();
         alert("The game is a draw!");
       }, 100);
       return;
@@ -105,8 +104,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setPlayerMoveCompleted(false);
 
       setTimeout(() => {
-        console.log("vsComputer");
-
         const emptyCols = board[0]
           .map((_, i) => i)
           .filter((i) => getNextEmptyRow(board, i) !== null);
@@ -125,7 +122,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
             if (checkWinner(newBoard, newRow, randomCol, player2!.color)) {
               setTimeout(() => {
                 setWinner(player2);
-                alert(`Player ${player2.name} wins!`);
+                // alert(`Player ${player2.name} wins!`);
               }, 100);
               return;
             }
@@ -147,17 +144,25 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [currentPlayer, board, mode, player1, player2]);
 
   const startGame = (player1Name: string, player2Name: string) => {
-    if (player1Color && player2Color) {
-      setPlayer1({ name: player1Name, color: player1Color });
-      setPlayer2({ name: player2Name, color: player2Color });
-      setCurrentPlayer({ name: player1Name, color: player1Color });
-      setBoard(createEmptyBoard(rows, cols));
-      setMoves(0);
-      setWinner(null);
-      setPlayerMoveCompleted(true);
-    } else {
-      alert("Select colors for both players");
-    }
+    setPlayer1Color(defaultPlayer1Color);
+    setPlayer2Color(defaultPlayer2Color);
+
+    setPlayer1({
+      name: player1Name,
+      color: player1Color || defaultPlayer1Color,
+    });
+    setPlayer2({
+      name: player2Name,
+      color: player2Color || defaultPlayer2Color,
+    });
+    setCurrentPlayer({
+      name: player1Name,
+      color: player1Color || defaultPlayer1Color,
+    });
+    setBoard(createEmptyBoard(rows, cols));
+    setMoves(0);
+    setWinner(null);
+    setPlayerMoveCompleted(true);
   };
 
   const resetGame = () => {

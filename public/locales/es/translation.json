@@ -1,9 +1,8 @@
 {
   "select_language": "Seleccione el Idioma",
-  "english": "Inglés",
-  "portuguese": "Portugués",
-  "russian": "Ruso",
-  "spanish": "Espańol",
+  "english": "Inglês",
+  "portuguese": "Português",
+  "spanish": "Espanhol",
   "select_color": "Por favor, seleccione el color para ambos jugadores.",
   "player1_name": "Nombre del Jugador 1:",
   "player1_color": "Color de la pieza del Jugador 1:",
@@ -16,11 +15,16 @@
   "player_info": "Información de los Jugadores:",
   "reset_game": "Reiniciar Juego",
   "current_player": "Jugador Actual",
+  "select_mode": "Elige el Modo",
+  "multiplayer": "Multijugador",
+  "vs_computer": "Contra la Máquina",
+  "computer_player_name": "Máquina",
   "colors": {
     "red": "Rojo",
     "yellow": "Amarillo",
     "blue": "Azul",
     "green": "Verde",
-    "purple": "Morado"
+    "purple": "Morado",
+    "black": "Negro"
   }
 }
