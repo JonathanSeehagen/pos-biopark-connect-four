@@ -8,7 +8,7 @@ interface SetUsersProps {
   player1Color: Player | null;
   player2Color: Player | null;
   handleColorSelect: (color: Player, isPlayer1: boolean) => void;
-  mode: string;
+  mode: "multiplayer" | "vsComputer" | null;
   handlePlayersSubmit: (player1Name: string, player2Name: string) => void;
 }
 

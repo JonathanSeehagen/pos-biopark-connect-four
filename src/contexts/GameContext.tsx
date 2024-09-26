@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   createEmptyBoard,
   checkWinner,
@@ -6,7 +6,9 @@ import {
   getNextEmptyRow,
   Player,
   BoardType,
-} from "../utils/gameLogic";
+  checkConnectFourWinner,
+  checkTicTacToeWinner,
+} from "../utils/gameLogic"; // Ajuste conforme necessário
 import { useTranslation } from "react-i18next";
 
 type PlayerInfo = {
@@ -40,7 +42,9 @@ type GameContextType = {
   handleLanguageChange: (language: string) => void;
   handleModeSelect: (mode: "multiplayer" | "vsComputer") => void;
   handleColorSelect: (color: Player, isPlayer1: boolean) => void;
-  handlePlayersSubmit: (player1Name: string, player2Name: string) => void; // Novo método
+  selectedGame: "Connect Four" | "Tic Tac Toe" | null;
+  setSelectedGame: (game: "Connect Four" | "Tic Tac Toe") => void;
+  handlePlayersSubmit: (player1Name: string, player2Name: string) => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -50,33 +54,30 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { t } = useTranslation();
 
-  const rows = 6;
-  const cols = 7;
-
   const [player1, setPlayer1] = useState<PlayerInfo | null>(null);
   const [player2, setPlayer2] = useState<PlayerInfo | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<PlayerInfo | null>(null);
-  const [board, setBoard] = useState<BoardType>(createEmptyBoard(rows, cols));
   const [moves, setMoves] = useState<number>(0);
   const [winner, setWinner] = useState<PlayerInfo | "draw" | null>(null);
   const [mode, setMode] = useState<"multiplayer" | "vsComputer" | null>(null);
   const [player1Color, setPlayer1Color] = useState<Player | null>(null);
   const [player2Color, setPlayer2Color] = useState<Player | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedGame, setSelectedGame] = useState<
+    "Connect Four" | "Tic Tac Toe" | null
+  >(null);
+  const [board, setBoard] = useState<BoardType>(createEmptyBoard(6, 7)); // Inicializa o board
   const [playerMoveCompleted, setPlayerMoveCompleted] = useState<boolean>(true);
 
   const defaultPlayer1Color = "red";
   const defaultPlayer2Color = "yellow";
 
   const handleLanguageChange = (language: string) => {
-    console.log("Language Selected: ", language);
     setSelectedLanguage(language);
   };
 
   const handleModeSelect = (selectedMode: "multiplayer" | "vsComputer") => {
-    console.log("Mode Selected: ", selectedMode);
     setMode(selectedMode);
-
     if (selectedMode === "vsComputer") {
       handleColorSelect("black", false);
     }
@@ -84,16 +85,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleColorSelect = (color: Player, isPlayer1: boolean) => {
     if (isPlayer1) {
-      console.log("Color Player 1: ", color);
       setPlayer1Color(color);
     } else {
-      console.log("Color Player 2: ", color);
       setPlayer2Color(color);
     }
   };
 
   const handleClick = (colIndex: number) => {
-    if (!currentPlayer || winner || !playerMoveCompleted) return;
+    if (!currentPlayer || winner) return;
 
     const newRow = getNextEmptyRow(board, colIndex);
     if (newRow === null) {
@@ -106,22 +105,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     setBoard(newBoard);
     setMoves((prevMoves) => prevMoves + 1);
 
-    if (
-      moves >= 6 &&
-      checkWinner(newBoard, newRow, colIndex, currentPlayer.color)
-    ) {
-      setTimeout(() => {
+    // Verifica vencedor baseado no jogo selecionado
+    if (selectedGame === "Connect Four") {
+      if (
+        moves >= 6 &&
+        checkConnectFourWinner(newBoard, newRow, colIndex, currentPlayer.color)
+      ) {
         setWinner(currentPlayer);
-      }, 100);
-      return;
+      }
+    } else if (selectedGame === "Tic Tac Toe") {
+      if (
+        moves >= 2 &&
+        checkTicTacToeWinner(newBoard, newRow, colIndex, currentPlayer.color)
+      ) {
+        setWinner(currentPlayer);
+      }
     }
 
     if (isBoardFull(newBoard)) {
-      setTimeout(() => {
-        setWinner("draw");
-        alert("The game is a draw!");
-      }, 100);
-      return;
+      setWinner("draw");
+      alert("The game is a draw!");
     }
 
     setPlayerMoveCompleted(true);
@@ -150,11 +153,31 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
             setBoard(newBoard);
             setMoves((prevMoves) => prevMoves + 1);
 
-            if (checkWinner(newBoard, newRow, randomCol, player2!.color)) {
-              setTimeout(() => {
-                setWinner(player2);
-              }, 100);
-              return;
+            // Verifica vencedor baseado no jogo selecionado
+            if (selectedGame === "Connect Four") {
+              if (
+                moves >= 6 &&
+                checkConnectFourWinner(
+                  newBoard,
+                  newRow,
+                  randomCol,
+                  player2!.color
+                )
+              ) {
+                setWinner(currentPlayer);
+              }
+            } else if (selectedGame === "Tic Tac Toe") {
+              if (
+                moves >= 2 &&
+                checkTicTacToeWinner(
+                  newBoard,
+                  newRow,
+                  randomCol,
+                  player2!.color
+                )
+              ) {
+                setWinner(currentPlayer);
+              }
             }
 
             if (isBoardFull(newBoard)) {
@@ -171,7 +194,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }, 1000);
     }
-  }, [currentPlayer, board, mode, player1, player2]);
+  }, [currentPlayer, board, mode, player1, player2, selectedGame, moves]);
 
   const startGame = (player1Name: string, player2Name: string) => {
     setPlayer1({
@@ -184,6 +207,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         name: player2Name,
         color: player2Color || defaultPlayer2Color,
       });
+    } else {
+      setPlayer2({
+        name: t("computer_player_name"),
+        color: "black",
+      });
     }
 
     setCurrentPlayer({
@@ -191,7 +219,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       color: player1Color || defaultPlayer1Color,
     });
 
-    setBoard(createEmptyBoard(rows, cols));
+    // Recria o tabuleiro com base no jogo selecionado
+    if (selectedGame === "Connect Four") {
+      setBoard(createEmptyBoard(6, 7));
+    } else if (selectedGame === "Tic Tac Toe") {
+      setBoard(createEmptyBoard(3, 3)); // Tabuleiro para Jogo da Velha
+    }
+
     setMoves(0);
     setWinner(null);
     setPlayerMoveCompleted(true);
@@ -217,14 +251,19 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       name: player1Name,
       color: selectedPlayer1Color,
     });
-    setBoard(createEmptyBoard(rows, cols));
+    //setBoard(createEmptyBoard(rows, cols));
     setMoves(0);
     setWinner(null);
     setPlayerMoveCompleted(true);
   };
 
   const resetGame = () => {
-    setBoard(createEmptyBoard(rows, cols));
+    // Reseta o tabuleiro e o estado do jogo
+    if (selectedGame === "Connect Four") {
+      setBoard(createEmptyBoard(6, 7));
+    } else if (selectedGame === "Tic Tac Toe") {
+      setBoard(createEmptyBoard(3, 3));
+    }
     setCurrentPlayer(player1);
     setMoves(0);
     setWinner(null);
@@ -259,6 +298,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         handleLanguageChange,
         handleModeSelect,
         handleColorSelect,
+        selectedGame,
+        setSelectedGame,
         handlePlayersSubmit,
       }}
     >

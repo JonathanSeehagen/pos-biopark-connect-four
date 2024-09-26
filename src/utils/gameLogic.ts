@@ -1,18 +1,24 @@
-export type Player = "red" | "yellow" | "blue" | "green" | "purple" | "black";
-
+export type Player =
+  | "red"
+  | "yellow"
+  | "blue"
+  | "green"
+  | "purple"
+  | "black"
+  | "X"
+  | "O";
 export type BoardType = Player[][];
 
 export const createEmptyBoard = (rows: number, cols: number): BoardType => {
-  return Array(rows)
-    .fill(null)
-    .map(() => Array(cols).fill(null));
+  return Array.from({ length: rows }, () => Array(cols).fill(null));
 };
 
 export const checkWinner = (
   board: BoardType,
   row: number,
   col: number,
-  player: Player
+  player: Player,
+  winCondition: number
 ): boolean => {
   if (!player) return false;
 
@@ -30,7 +36,7 @@ export const checkWinner = (
     yDir: number
   ): boolean => {
     let count = 0;
-    for (let i = -3; i <= 3; i++) {
+    for (let i = -winCondition + 1; i < winCondition; i++) {
       const newRow = r + i * yDir;
       const newCol = c + i * xDir;
       if (
@@ -41,7 +47,7 @@ export const checkWinner = (
         board[newRow][newCol] === player
       ) {
         count++;
-        if (count === 4) return true;
+        if (count === winCondition) return true;
       } else {
         count = 0;
       }
@@ -71,3 +77,21 @@ export const getNextEmptyRow = (
   }
   return null; // Coluna está cheia
 };
+
+// Funções específicas para o Connect Four
+export const connectFourWinCondition = 4;
+export const checkConnectFourWinner = (
+  board: BoardType,
+  row: number,
+  col: number,
+  player: Player
+): boolean => checkWinner(board, row, col, player, connectFourWinCondition);
+
+// Funções específicas para o Tic Tac Toe
+export const ticTacToeWinCondition = 3;
+export const checkTicTacToeWinner = (
+  board: BoardType,
+  row: number,
+  col: number,
+  player: Player
+): boolean => checkWinner(board, row, col, player, ticTacToeWinCondition);

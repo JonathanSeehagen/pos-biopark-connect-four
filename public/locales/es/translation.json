@@ -19,6 +19,9 @@
   "multiplayer": "Multijugador",
   "vs_computer": "Contra la Máquina",
   "computer_player_name": "Máquina",
+  "select_game": "Seleccionar juego",
+  "connect_four": "Conecta Cuatro",
+  "tic_tac_toe": "Tres en Raya",
   "wins": "ganó",
   "colors": {
     "red": "Rojo",

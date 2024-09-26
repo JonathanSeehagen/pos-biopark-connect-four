@@ -4,9 +4,12 @@ import SetUsers from "./SetUser";
 import GameBoard from "./GameBoard";
 import ModeSelect from "./ModeSelect";
 import LanguageSelect from "./LanguageSelect";
+import GameSelect from "./GameSelect";
+import { createEmptyBoard } from "@/utils/gameLogic";
 
 const Board: React.FC = () => {
   const {
+    setBoard,
     selectedLanguage,
     handleLanguageChange,
     mode,
@@ -15,15 +18,29 @@ const Board: React.FC = () => {
     player2Color,
     handleColorSelect,
     handlePlayersSubmit,
+    setSelectedGame,
   } = useGame();
 
   // Adicionando o controle de step
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
 
   // Avançar para o próximo step após os jogadores serem configurados
   const handleSubmitPlayers = (player1Name: string, player2Name: string) => {
     handlePlayersSubmit(player1Name, player2Name);
-    setStep(2); // Avança para o próximo step após o submit
+    setStep(5); // Avança para o próximo step após o submit
+  };
+
+  const handleGameSelect = (game: "Connect Four" | "Tic Tac Toe") => {
+    setSelectedGame(game);
+    setBoard(
+      game === "Connect Four" ? createEmptyBoard(6, 7) : createEmptyBoard(3, 3)
+    );
+    setStep(3);
+  };
+
+  const _handleModeSelect = (mode: "multiplayer" | "vsComputer") => {
+    setStep(4);
+    handleModeSelect(mode);
   };
 
   return (
@@ -32,21 +49,25 @@ const Board: React.FC = () => {
         <LanguageSelect handleLanguageChange={handleLanguageChange} />
       )}
 
-      {selectedLanguage && !mode && (
-        <ModeSelect handleModeSelect={handleModeSelect} />
+      {selectedLanguage && step === 2 && (
+        <GameSelect onGameSelect={handleGameSelect} />
       )}
 
-      {selectedLanguage && mode && step === 1 && (
+      {selectedLanguage && step === 3 && (
+        <ModeSelect handleModeSelect={_handleModeSelect} />
+      )}
+
+      {selectedLanguage && step === 4 && (
         <SetUsers
           player1Color={player1Color}
           player2Color={player2Color}
           handleColorSelect={handleColorSelect}
           mode={mode}
-          handlePlayersSubmit={handleSubmitPlayers} // Usa a função local para avançar o step
+          handlePlayersSubmit={handleSubmitPlayers}
         />
       )}
 
-      {selectedLanguage && mode && step === 2 && <GameBoard />}
+      {selectedLanguage && mode && step === 5 && <GameBoard />}
     </div>
   );
 };
