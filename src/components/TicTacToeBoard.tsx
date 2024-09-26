@@ -1,17 +1,16 @@
-// src/components/TicTacToeBoard.tsx
 import React from "react";
 import { useGame } from "../contexts/GameContext";
 
-const TicTacToeBoard: React.FC = () => {
+export default function TicTacToeBoard() {
   const { board, handleClick } = useGame();
 
   return (
-    <div className="grid grid-cols-3 gap-2 mb-4">
+    <div className="grid grid-cols-3 gap-1 mb-4 bg-black">
       {board.map((row, rowIndex) =>
         row.map((cell, colIndex) => (
           <div
             key={`${rowIndex}-${colIndex}`}
-            className="w-12 h-12 bg-gray-100 border border-black flex items-center justify-center cursor-pointer"
+            className="w-12 h-12 bg-gray-100 flex items-center justify-center cursor-pointer"
             onClick={() => {
               handleClick(rowIndex, colIndex); // Lógica adaptada para Jogo da Velha
             }}
@@ -38,6 +37,4 @@ const TicTacToeBoard: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default TicTacToeBoard;
+}

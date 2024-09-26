@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   createEmptyBoard,
-  checkWinner,
   isBoardFull,
   getNextEmptyRow,
   Player,
@@ -104,7 +103,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       const newRow = getNextEmptyRow(board, colIndex);
 
       if (newRow === null) {
-        alert("Column is full");
         return;
       }
 
@@ -120,11 +118,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       ) {
         setWinner(currentPlayer);
       }
+
+      if (isBoardFull(newBoard)) {
+        setWinner("draw");
+      }
     } else if (selectedGame === "Tic Tac Toe") {
-      // --- Lógica Tic Tac Toe ---
-      // Verifica se a célula já está ocupada
       if (board[rowIndex][colIndex] !== null) {
-        alert("This cell is already taken");
         return;
       }
 
@@ -140,12 +139,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       ) {
         setWinner(currentPlayer);
       }
-    }
 
-    // if (isBoardFull(newBoard)) {
-    //   setWinner("draw");
-    //   alert("The game is a draw!");
-    // }
+      if (isBoardFull(newBoard)) {
+        setWinner("draw");
+      }
+    }
 
     setPlayerMoveCompleted(true);
     setCurrentPlayer((prev) =>
@@ -153,72 +151,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  // const handleClick = (rowIndex: number, colIndex: number) => {
-  //   console.log("selectedGame: " + selectedGame);
-  //   console.log("currentPlayer: " + JSON.stringify(currentPlayer));
-  //   console.log("winner: " + winner);
-  //   console.log("board: " + board);
-
-  //   if (!currentPlayer || winner) return;
-
-  //   // Verifica se o jogo é Connect Four ou Tic Tac Toe
-  //   if (selectedGame === "Connect Four") {
-  //     // --- Lógica Connect Four (igual à anterior) ---
-  //     const newRow = getNextEmptyRow(board, colIndex);
-
-  //     if (newRow === null) {
-  //       alert("Column is full");
-  //       return;
-  //     }
-
-  //     const newBoard = board.map((row) => [...row]);
-  //     newBoard[newRow][colIndex] = currentPlayer.color;
-  //     setBoard(newBoard);
-  //     setMoves((prevMoves) => prevMoves + 1);
-
-  //     // Verifica o vencedor para Connect Four
-  //     if (
-  //       moves >= 6 &&
-  //       checkConnectFourWinner(newBoard, newRow, colIndex, currentPlayer.color)
-  //     ) {
-  //       setWinner(currentPlayer);
-  //     }
-  //   } else if (selectedGame === "Tic Tac Toe") {
-  //     // --- Lógica Tic Tac Toe ---
-  //     // Verifica se a célula já está ocupada
-  //     if (board[rowIndex][colIndex] !== null) {
-  //       alert("This cell is already taken");
-  //       return;
-  //     }
-
-  //     const newBoard = board.map((row) => [...row]);
-  //     newBoard[rowIndex][colIndex] = currentPlayer.color;
-  //     setBoard(newBoard);
-  //     setMoves((prevMoves) => prevMoves + 1);
-
-  //     // Verifica o vencedor para Tic Tac Toe
-  //     if (
-  //       moves >= 2 &&
-  //       checkTicTacToeWinner(newBoard, rowIndex, colIndex, currentPlayer.color)
-  //     ) {
-  //       setWinner(currentPlayer);
-  //     }
-  //   }
-
-  //   // Verifica empate para ambos os jogos
-  //   // if (isBoardFull(newBoard)) {
-  //   //   setWinner("draw");
-  //   //   alert("The game is a draw!");
-  //   // }
-
-  //   // Alterna o jogador
-  //   setPlayerMoveCompleted(true);
-  //   setCurrentPlayer((prev) =>
-  //     prev?.color === player1?.color ? player2 : player1
-  //   );
-  // };
-
   useEffect(() => {
+    if (!player1 || !player2) {
+      return;
+    }
+
     if (mode === "vsComputer" && currentPlayer?.name === player2?.name) {
       setPlayerMoveCompleted(false);
 
@@ -236,6 +173,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
             const newBoard = board.map((row) => [...row]);
 
             newBoard[newRow][randomCol] = player2!.color;
+
             setBoard(newBoard);
             setMoves((prevMoves) => prevMoves + 1);
 
@@ -318,9 +256,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handlePlayersSubmit = (player1Name: string, player2Name: string) => {
-    console.log("Player 1 name: ", player1Name);
-    console.log("Player 2 name: ", player2Name);
-
     const selectedPlayer1Color = player1Color || defaultPlayer1Color;
     const selectedPlayer2Color = player2Color || defaultPlayer2Color;
 

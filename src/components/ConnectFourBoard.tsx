@@ -1,9 +1,8 @@
 // src/components/ConnectFourBoard.tsx
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { useGame } from "../contexts/GameContext";
 
-const ConnectFourBoard: React.FC = () => {
+export default function ConnectFourBoard() {
   const { board, handleClick } = useGame();
 
   return (
@@ -39,6 +38,4 @@ const ConnectFourBoard: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default ConnectFourBoard;
+}

@@ -6,7 +6,7 @@ interface ModeSelectProps {
   handleModeSelect: (mode: "multiplayer" | "vsComputer") => void;
 }
 
-const ModeSelect: React.FC<ModeSelectProps> = ({ handleModeSelect }) => {
+export default function ModeSelect({ handleModeSelect }: ModeSelectProps) {
   const { t } = useTranslation();
 
   return (
@@ -28,6 +28,4 @@ const ModeSelect: React.FC<ModeSelectProps> = ({ handleModeSelect }) => {
       </div>
     </div>
   );
-};
-
-export default ModeSelect;
+}

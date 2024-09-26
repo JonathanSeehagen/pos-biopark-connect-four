@@ -14,8 +14,6 @@ export default function Board() {
     handleLanguageChange,
     mode,
     handleModeSelect,
-    player1Color,
-    player2Color,
     handleColorSelect,
     handlePlayersSubmit,
     setSelectedGame,
@@ -59,8 +57,6 @@ export default function Board() {
 
       {selectedLanguage && step === 4 && (
         <SetUsers
-          player1Color={player1Color}
-          player2Color={player2Color}
           handleColorSelect={handleColorSelect}
           mode={mode}
           handlePlayersSubmit={handleSubmitPlayers}

@@ -71,9 +71,6 @@ export const getNextEmptyRow = (
   board: BoardType,
   colIndex: number
 ): number | null => {
-  console.log("board: " + board);
-  console.log("colIndex: " + colIndex);
-
   for (let rowIndex = board.length - 1; rowIndex >= 0; rowIndex--) {
     if (board[rowIndex][colIndex] === null) {
       return rowIndex;
