@@ -7,23 +7,23 @@ const ConnectFourBoard: React.FC = () => {
   const { board, handleClick } = useGame();
 
   return (
-    <div className="grid grid-cols-7 gap-2 mb-4">
+    <div className="grid grid-cols-7 gap-2 mb-4 bg-blue-600 rounded-xl p-4 shadow-xl">
       {board.map((row, rowIndex) =>
         row.map((cell, colIndex) => (
           <div
             key={`${rowIndex}-${colIndex}`}
-            className="w-12 h-12 bg-gray-100 border border-black flex items-center justify-center cursor-pointer"
+            className="w-12 h-12 bg-gray-100 flex items-center justify-center cursor-pointer rounded-full"
             onClick={() => {
-              handleClick(colIndex);
+              handleClick(0, colIndex);
             }}
           >
             {cell && (
               <div
-                className={`w-8 h-8 rounded-full ${
+                className={`w-12 h-12 rounded-full shadow-lg ${
                   cell === "red"
                     ? "bg-red-500"
-                    : cell === "yellow"
-                    ? "bg-yellow-500"
+                    : cell === "orange"
+                    ? "bg-orange-500"
                     : cell === "blue"
                     ? "bg-blue-500"
                     : cell === "green"

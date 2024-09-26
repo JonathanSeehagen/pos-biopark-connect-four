@@ -5,11 +5,11 @@ interface GameSelectProps {
   onGameSelect: (game: "Connect Four" | "Tic Tac Toe") => void;
 }
 
-const GameSelect: React.FC<GameSelectProps> = ({ onGameSelect }) => {
+export default function GameSelect({ onGameSelect }: GameSelectProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col space-y-4 bg-slate-300 p-4">
+    <div className="flex flex-col space-y-4  bg-gray-100 p-5 rounded-xl shadow-lg border-gray-300 border-1">
       <h2 className="text-2xl font-bold text-black">{`${t(
         "select_game"
       )}:`}</h2>
@@ -29,6 +29,4 @@ const GameSelect: React.FC<GameSelectProps> = ({ onGameSelect }) => {
       </div>
     </div>
   );
-};
-
-export default GameSelect;
+}

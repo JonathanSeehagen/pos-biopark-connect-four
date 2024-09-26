@@ -3,11 +3,11 @@ import { useGame } from "../contexts/GameContext";
 import SetUsers from "./SetUser";
 import GameBoard from "./GameBoard";
 import ModeSelect from "./ModeSelect";
-import LanguageSelect from "./LanguageSelect";
 import GameSelect from "./GameSelect";
 import { createEmptyBoard } from "@/utils/gameLogic";
+import LanguageSelect from "./LanguageSelect";
 
-const Board: React.FC = () => {
+export default function Board() {
   const {
     setBoard,
     selectedLanguage,
@@ -70,6 +70,4 @@ const Board: React.FC = () => {
       {selectedLanguage && mode && step === 5 && <GameBoard />}
     </div>
   );
-};
-
-export default Board;
+}

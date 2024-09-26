@@ -10,6 +10,7 @@ import {
   checkTicTacToeWinner,
 } from "../utils/gameLogic"; // Ajuste conforme necessário
 import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 
 type PlayerInfo = {
   name: string;
@@ -36,7 +37,7 @@ type GameContextType = {
   setMode: (mode: "multiplayer" | "vsComputer") => void;
   setPlayer1Color: (color: Player) => void;
   setPlayer2Color: (color: Player) => void;
-  handleClick: (colIndex: number) => void;
+  handleClick: (rowIndex: number, colIndex: number) => void;
   resetGame: () => void;
   startGame: (player1Name: string, player2Name: string) => void;
   handleLanguageChange: (language: string) => void;
@@ -70,10 +71,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [playerMoveCompleted, setPlayerMoveCompleted] = useState<boolean>(true);
 
   const defaultPlayer1Color = "red";
-  const defaultPlayer2Color = "yellow";
+  const defaultPlayer2Color = "orange";
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
+    i18n.changeLanguage(language); // Alterar o idioma dinamicamente
   };
 
   const handleModeSelect = (selectedMode: "multiplayer" | "vsComputer") => {
@@ -91,22 +93,27 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const handleClick = (colIndex: number) => {
+  const handleClick = (rowIndex: number, colIndex: number) => {
     if (!currentPlayer || winner) return;
 
-    const newRow = getNextEmptyRow(board, colIndex);
-    if (newRow === null) {
-      alert("Column is full");
-      return;
-    }
-
-    const newBoard = board.map((row) => [...row]);
-    newBoard[newRow][colIndex] = currentPlayer.color;
-    setBoard(newBoard);
-    setMoves((prevMoves) => prevMoves + 1);
+    // Verifica se o jogo é Connect Four ou Tic Tac Toe
 
     // Verifica vencedor baseado no jogo selecionado
     if (selectedGame === "Connect Four") {
+      // --- Lógica Connect Four (igual à anterior) ---
+      const newRow = getNextEmptyRow(board, colIndex);
+
+      if (newRow === null) {
+        alert("Column is full");
+        return;
+      }
+
+      const newBoard = board.map((row) => [...row]);
+      newBoard[newRow][colIndex] = currentPlayer.color;
+      setBoard(newBoard);
+      setMoves((prevMoves) => prevMoves + 1);
+
+      // Verifica o vencedor para Connect Four
       if (
         moves >= 6 &&
         checkConnectFourWinner(newBoard, newRow, colIndex, currentPlayer.color)
@@ -114,24 +121,102 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setWinner(currentPlayer);
       }
     } else if (selectedGame === "Tic Tac Toe") {
+      // --- Lógica Tic Tac Toe ---
+      // Verifica se a célula já está ocupada
+      if (board[rowIndex][colIndex] !== null) {
+        alert("This cell is already taken");
+        return;
+      }
+
+      const newBoard = board.map((row) => [...row]);
+      newBoard[rowIndex][colIndex] = currentPlayer.color;
+      setBoard(newBoard);
+      setMoves((prevMoves) => prevMoves + 1);
+
+      // Verifica o vencedor para Tic Tac Toe
       if (
         moves >= 2 &&
-        checkTicTacToeWinner(newBoard, newRow, colIndex, currentPlayer.color)
+        checkTicTacToeWinner(newBoard, rowIndex, colIndex, currentPlayer.color)
       ) {
         setWinner(currentPlayer);
       }
     }
 
-    if (isBoardFull(newBoard)) {
-      setWinner("draw");
-      alert("The game is a draw!");
-    }
+    // if (isBoardFull(newBoard)) {
+    //   setWinner("draw");
+    //   alert("The game is a draw!");
+    // }
 
     setPlayerMoveCompleted(true);
     setCurrentPlayer((prev) =>
       prev?.color === player1?.color ? player2 : player1
     );
   };
+
+  // const handleClick = (rowIndex: number, colIndex: number) => {
+  //   console.log("selectedGame: " + selectedGame);
+  //   console.log("currentPlayer: " + JSON.stringify(currentPlayer));
+  //   console.log("winner: " + winner);
+  //   console.log("board: " + board);
+
+  //   if (!currentPlayer || winner) return;
+
+  //   // Verifica se o jogo é Connect Four ou Tic Tac Toe
+  //   if (selectedGame === "Connect Four") {
+  //     // --- Lógica Connect Four (igual à anterior) ---
+  //     const newRow = getNextEmptyRow(board, colIndex);
+
+  //     if (newRow === null) {
+  //       alert("Column is full");
+  //       return;
+  //     }
+
+  //     const newBoard = board.map((row) => [...row]);
+  //     newBoard[newRow][colIndex] = currentPlayer.color;
+  //     setBoard(newBoard);
+  //     setMoves((prevMoves) => prevMoves + 1);
+
+  //     // Verifica o vencedor para Connect Four
+  //     if (
+  //       moves >= 6 &&
+  //       checkConnectFourWinner(newBoard, newRow, colIndex, currentPlayer.color)
+  //     ) {
+  //       setWinner(currentPlayer);
+  //     }
+  //   } else if (selectedGame === "Tic Tac Toe") {
+  //     // --- Lógica Tic Tac Toe ---
+  //     // Verifica se a célula já está ocupada
+  //     if (board[rowIndex][colIndex] !== null) {
+  //       alert("This cell is already taken");
+  //       return;
+  //     }
+
+  //     const newBoard = board.map((row) => [...row]);
+  //     newBoard[rowIndex][colIndex] = currentPlayer.color;
+  //     setBoard(newBoard);
+  //     setMoves((prevMoves) => prevMoves + 1);
+
+  //     // Verifica o vencedor para Tic Tac Toe
+  //     if (
+  //       moves >= 2 &&
+  //       checkTicTacToeWinner(newBoard, rowIndex, colIndex, currentPlayer.color)
+  //     ) {
+  //       setWinner(currentPlayer);
+  //     }
+  //   }
+
+  //   // Verifica empate para ambos os jogos
+  //   // if (isBoardFull(newBoard)) {
+  //   //   setWinner("draw");
+  //   //   alert("The game is a draw!");
+  //   // }
+
+  //   // Alterna o jogador
+  //   setPlayerMoveCompleted(true);
+  //   setCurrentPlayer((prev) =>
+  //     prev?.color === player1?.color ? player2 : player1
+  //   );
+  // };
 
   useEffect(() => {
     if (mode === "vsComputer" && currentPlayer?.name === player2?.name) {
@@ -149,6 +234,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (newRow !== null) {
             const newBoard = board.map((row) => [...row]);
+
             newBoard[newRow][randomCol] = player2!.color;
             setBoard(newBoard);
             setMoves((prevMoves) => prevMoves + 1);

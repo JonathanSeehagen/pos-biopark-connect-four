@@ -10,7 +10,7 @@ const ModeSelect: React.FC<ModeSelectProps> = ({ handleModeSelect }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col space-y-4 bg-slate-300 p-4">
+    <div className="flex flex-col space-y-4 bg-gray-100 p-5 rounded-xl shadow-lg border-gray-300 border-1">
       <h2 className="text-2xl font-bold text-black">{t("select_mode")}</h2>
       <div className="flex space-x-2">
         <button

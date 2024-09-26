@@ -11,46 +11,53 @@ const GameBoard: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex space-x-8">
-      {selectedGame === "Connect Four" && <ConnectFourBoard />}
-      {selectedGame === "Tic Tac Toe" && <TicTacToeBoard />}
+    <div className="flex space-x-20 justify-center items-center">
+      <div>
+        {selectedGame === "Connect Four" && <ConnectFourBoard />}
+        {selectedGame === "Tic Tac Toe" && <TicTacToeBoard />}
+      </div>
 
-      <div className="flex flex-col space-y-4">
-        <div className="text-xl font-bold text-black">{t("player_info")}</div>
-        <div className="text-lg text-black">
-          <span className="font-bold">{player1?.name}</span>:{" "}
-          <span style={{ color: player1?.color }}>
-            {t(`colors.${player1?.color}`)}
-          </span>
-        </div>
-        <div className="text-lg text-black">
-          <span className="font-bold">{player2?.name}</span>:{" "}
-          <span style={{ color: player2?.color }}>
-            {t(`colors.${player2?.color}`)}
-          </span>
-        </div>
-        <div className="text-xl font-bold text-black mt-4">
-          {t("current_player")}:
-          <div
-            className="text-lg font-bold"
-            style={{ color: currentPlayer?.color }}
+      <div>
+        <div className="flex w-80 flex-col space-y-4   bg-gray-100 p-5 rounded-xl shadow-lg border-gray-300 border-1">
+          {winner ? (
+            <div className="text-2xl font-bold text-black mb-2 text-center">
+              {winner === "draw"
+                ? t("it's_a_draw")
+                : `${winner.name} ${t("wins")}!`}
+            </div>
+          ) : (
+            <>
+              <div className="text-xl font-bold text-black">
+                {t("player_info")}
+              </div>
+              <div className="text-md text-black">
+                <span className="font-bold" style={{ color: player1?.color }}>
+                  {player1?.name}
+                </span>{" "}
+                🆚{" "}
+                <span className="font-bold" style={{ color: player2?.color }}>
+                  {player2?.name}
+                </span>
+              </div>
+
+              <div className="text-xl font-bold text-black mt-4">
+                {t("current_player")}:{" "}
+                <span
+                  className="text-lg font-bold"
+                  style={{ color: currentPlayer?.color }}
+                >
+                  {currentPlayer?.name}
+                </span>
+              </div>
+            </>
+          )}
+          <button
+            onClick={resetGame}
+            className="px-4 py-2 bg-blue-500 text-white rounded"
           >
-            {currentPlayer?.name}
-          </div>
+            {t("reset_game")}
+          </button>
         </div>
-        {winner && (
-          <div className="text-2xl font-bold text-black mb-4">
-            {winner === "draw"
-              ? t("it's_a_draw")
-              : `${winner.name} ${t("wins")}!`}
-          </div>
-        )}
-        <button
-          onClick={resetGame}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          {t("reset_game")}
-        </button>
       </div>
     </div>
   );

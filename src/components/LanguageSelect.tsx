@@ -6,13 +6,13 @@ interface LanguageSelectProps {
   handleLanguageChange: (lang: string) => void;
 }
 
-const LanguageSelect: React.FC<LanguageSelectProps> = ({
+export default function LanguageSelect({
   handleLanguageChange,
-}) => {
+}: LanguageSelectProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col space-y-4 bg-slate-300 p-4">
+    <div className="flex flex-col space-y-4 bg-gray-100 p-5 rounded-xl shadow-lg border-gray-300 border-1">
       <h2 className="text-2xl font-bold text-black">{`${t(
         "select_language"
       )}:`}</h2>
@@ -38,6 +38,4 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({
       </div>
     </div>
   );
-};
-
-export default LanguageSelect;
+}

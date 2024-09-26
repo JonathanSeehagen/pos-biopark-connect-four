@@ -1,6 +1,6 @@
 export type Player =
   | "red"
-  | "yellow"
+  | "orange"
   | "blue"
   | "green"
   | "purple"
@@ -10,7 +10,8 @@ export type Player =
 export type BoardType = Player[][];
 
 export const createEmptyBoard = (rows: number, cols: number): BoardType => {
-  return Array.from({ length: rows }, () => Array(cols).fill(null));
+  const board = Array.from({ length: rows }, () => Array(cols).fill(null));
+  return board;
 };
 
 export const checkWinner = (
@@ -70,11 +71,15 @@ export const getNextEmptyRow = (
   board: BoardType,
   colIndex: number
 ): number | null => {
+  console.log("board: " + board);
+  console.log("colIndex: " + colIndex);
+
   for (let rowIndex = board.length - 1; rowIndex >= 0; rowIndex--) {
     if (board[rowIndex][colIndex] === null) {
       return rowIndex;
     }
   }
+
   return null; // Coluna está cheia
 };
 
