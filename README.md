@@ -1,6 +1,6 @@
-Como rodar a aplicação
+Como rodar a aplicação:
 
-Instalação
+Instalação:
 
 ```bash
 yarn
