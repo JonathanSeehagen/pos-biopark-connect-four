@@ -156,6 +156,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
+    if (winner) {
+      return;
+    }
+
     if (mode === "vsComputer" && currentPlayer?.name === player2?.name) {
       setPlayerMoveCompleted(false);
 
