@@ -1,12 +1,12 @@
-# Como rodar a aplicação
+Como rodar a aplicação
 
-## Instalação
+Instalação
 
 ```bash
 yarn
 ```
 
-## Execute o comando abaixo para instalar os pacotes:
+Execute o comando abaixo para instalar os pacotes:
 
 ```bash
 yarn dev
