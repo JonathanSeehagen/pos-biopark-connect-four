@@ -13,3 +13,5 @@ yarn dev
 ```
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador para ver o resultado.
+
+A documentação do projeto encontra-se na raiz do projeto. Arquivo documentacao.pdf.
